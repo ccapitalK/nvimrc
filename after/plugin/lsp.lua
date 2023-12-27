@@ -1,3 +1,6 @@
+-- Use native lspconfig
+require 'lspconfig'.dartls.setup{}
+
 local lsp = require("lsp-zero")
 
 lsp.preset("recommended")
