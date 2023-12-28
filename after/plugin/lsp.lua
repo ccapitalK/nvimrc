@@ -1,12 +1,10 @@
--- Use native lspconfig
-require 'lspconfig'.dartls.setup{}
-
 local lsp = require("lsp-zero")
 
 lsp.preset("recommended")
 
 lsp.ensure_installed({
     'rust_analyzer',
+    'pyright',
     'clangd',
 })
 
@@ -24,7 +22,18 @@ lsp.set_preferences({
 })
 
 lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
+    snippet = {
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp_mappings,
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+    }, {
+        { name = 'buffer' },
+    })
 })
 
 lsp.on_attach(function(client, bufnr)
@@ -48,3 +57,8 @@ lsp.on_attach(function(client, bufnr)
 end)
 
 lsp.setup()
+
+-- Use native lspconfig
+lspconfig = require 'lspconfig'
+lspconfig.dartls.setup{}
+lspconfig.serve_d.setup{}
