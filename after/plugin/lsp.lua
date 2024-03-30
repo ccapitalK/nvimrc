@@ -61,4 +61,10 @@ lsp.setup()
 -- Use native lspconfig
 lspconfig = require 'lspconfig'
 lspconfig.dartls.setup{}
-lspconfig.serve_d.setup{}
+lspconfig.serve_d.setup({
+    settings = {
+        dfmt = {
+            braceStyle = "otbs"
+        }
+    }
+})
