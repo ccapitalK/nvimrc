@@ -35,4 +35,12 @@ return require('packer').startup(function()
         {'L3MON4D3/LuaSnip'},     -- Required
       }
     }
+    use {
+        'maxmx03/solarized.nvim',
+        config = function()
+          vim.o.background = 'dark' -- or 'light'
+
+          vim.cmd.colorscheme 'solarized'
+        end
+    }
 end)
