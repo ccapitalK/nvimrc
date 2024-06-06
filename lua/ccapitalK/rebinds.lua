@@ -12,4 +12,11 @@ function OpenManPage()
     end
 end
 
+vim.keymap.set("n", "<leader>pl", function()
+    if next(vim.opt.colorcolumn:get()) == nil then
+        vim.opt.colorcolumn = "120"
+    else
+        vim.opt.colorcolumn = ""
+    end
+end, {silent = true})
 vim.keymap.set("n", "<leader>k", OpenManPage, {silent = true})
