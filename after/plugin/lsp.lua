@@ -53,6 +53,13 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>vf", function() vim.lsp.buf.format() end, opts)
     vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+    vim.keymap.set("n", "<leader>vl", function()
+        if vim.diagnostic.is_enabled() then
+            vim.diagnostic.disable()
+        else
+            vim.diagnostic.enable()
+        end
+    end, opts)
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 

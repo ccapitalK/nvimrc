@@ -20,3 +20,15 @@ vim.keymap.set("n", "<leader>pl", function()
     end
 end, {silent = true})
 vim.keymap.set("n", "<leader>k", OpenManPage, {silent = true})
+
+-- Toggle decorations
+vim.keymap.set("n", "<leader>po", function()
+    if vim.opt.number._value or vim.opt.relativenumber._value then
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+        vim.opt.signcolumn='no'
+    else
+        vim.opt.relativenumber = true
+        vim.opt.signcolumn='number'
+    end
+end, {silent = true})
