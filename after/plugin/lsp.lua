@@ -1,6 +1,13 @@
 require('mason').setup()
 
-local mason_lspconfig = require('mason-lspconfig')
+require('lspconfig')
+require('mason-lspconfig').setup({
+    ensure_installed = {
+        'rust_analyzer',
+        'pyright',
+        'clangd',
+    }
+})
 
 require('cmp').setup {
     sources = {
@@ -32,58 +39,40 @@ cmp.setup {
 }
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-function lsp_attach(client, bufnr)
-    local opts = {buffer = bufnr, remap = false}
+vim.api.nvim_create_autocmd('LspAttach', {
+    desc = 'LSP actions',
+    callback = function(client, bufnr)
+        local opts = {buffer = bufnr, remap = false}
 
-    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "<leader>gd", function() vim.lsp.buf.declaration() end, opts)
-    vim.keymap.set("n", "<leader>gs", function() vim.lsp.buf.implementation() end, opts)
-    vim.keymap.set("n", "<leader>vu", function() vim.lsp.buf.incoming_calls() end, opts)
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-    vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set("n", "<leader>vf", function() vim.lsp.buf.format() end, opts)
-    vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-    vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("n", "<leader>vl", function()
-        if vim.diagnostic.is_enabled() then
-            vim.diagnostic.disable()
-        else
-            vim.diagnostic.enable()
-        end
-    end, opts)
-    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end
-
-local lspconfig = require('lspconfig')
-
-mason_lspconfig.setup({
-    ensure_installed = {
-        'rust_analyzer',
-        'pyright',
-        'clangd',
-    },
-    handlers = {
-        function(server_name)
-            lspconfig[server_name].setup({
-                on_attach = lsp_attach,
-                capabilites = lsp_capabilities,
-            })
-        end,
-    }
+        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+        vim.keymap.set("n", "<leader>gd", function() vim.lsp.buf.declaration() end, opts)
+        vim.keymap.set("n", "<leader>gs", function() vim.lsp.buf.implementation() end, opts)
+        vim.keymap.set("n", "<leader>vu", function() vim.lsp.buf.incoming_calls() end, opts)
+        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+        vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, opts)
+        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, opts)
+        vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+        vim.keymap.set("n", "<leader>vf", function() vim.lsp.buf.format() end, opts)
+        vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set("n", "<leader>vl", function()
+            if vim.diagnostic.is_enabled() then
+                vim.diagnostic.disable()
+            else
+                vim.diagnostic.enable()
+            end
+        end, opts)
+        vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+    end
 })
 
 -- Use native lsp config
 vim.lsp.enable('dartls')
-vim.lsp.config('dartls', {
-    on_attach = lsp_attach,
-})
+vim.lsp.config('dartls', {})
 vim.lsp.enable('serve_d')
 vim.lsp.config('serve_d', {
-    on_attach = lsp_attach,
     settings = {
         dfmt = {
             braceStyle = "otbs"
