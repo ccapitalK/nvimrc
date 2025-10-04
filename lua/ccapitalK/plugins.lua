@@ -15,26 +15,19 @@ return require('packer').startup(function()
     use('mbbill/undotree')
 
     -- LSP stuff
-    use {
-      'VonHeikemen/lsp-zero.nvim',
-      branch = 'v2.x',
-      requires = {
-        -- LSP Support
-        {'neovim/nvim-lspconfig'},             -- Required
-        {                                      -- Optional
-          'williamboman/mason.nvim',
-          run = function()
-            pcall(vim.cmd, 'MasonUpdate')
-          end,
-        },
-        {'williamboman/mason-lspconfig.nvim'}, -- Optional
-
-        -- Autocompletion
-        {'hrsh7th/nvim-cmp'},     -- Required
-        {'hrsh7th/cmp-nvim-lsp'}, -- Required
-        {'L3MON4D3/LuaSnip'},     -- Required
-      }
+    use {'neovim/nvim-lspconfig'}             -- Required
+    use {                                      -- Optional
+      'williamboman/mason.nvim',
+      run = function()
+        pcall(vim.cmd, 'MasonUpdate')
+      end,
     }
+    use {'williamboman/mason-lspconfig.nvim'} -- Optional
+    use {'hrsh7th/nvim-cmp'}     -- Required
+    use {'hrsh7th/cmp-nvim-lsp'} -- Required
+    use {'L3MON4D3/LuaSnip'}     -- Required
+
+    -- Solarized
     use {
         'maxmx03/solarized.nvim',
         config = function()

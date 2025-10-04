@@ -1,27 +1,22 @@
-local lsp = require("lsp-zero")
+require('mason').setup()
 
-lsp.preset("recommended")
+local mason_lspconfig = require('mason-lspconfig')
 
-lsp.ensure_installed({
-    'rust_analyzer',
-    'pyright',
-    'clangd',
-})
+require('cmp').setup {
+    sources = {
+        { name = 'nvim_lsp' }
+    }
+}
 
 local cmp = require('cmp')
 local cmp_select = {behaviour = cmp.SelectBehavior.Select}
-local cmp_mappings = lsp.defaults.cmp_mappings({
+local cmp_mappings = cmp.mapping.preset.insert({
     ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
     ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
     ['<C-y>'] = cmp.mapping.confirm({select = true}),
     ['<C-Space>'] = cmp.mapping.complete()
 })
-
-lsp.set_preferences({
-    sign_icons = { }
-})
-
-lsp.setup_nvim_cmp({
+cmp.setup {
     snippet = {
         expand = function(args)
             require('luasnip').lsp_expand(args.body)
@@ -34,9 +29,10 @@ lsp.setup_nvim_cmp({
     }, {
         { name = 'buffer' },
     })
-})
+}
+local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-lsp.on_attach(function(client, bufnr)
+function lsp_attach(client, bufnr)
     local opts = {buffer = bufnr, remap = false}
 
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -60,14 +56,34 @@ lsp.on_attach(function(client, bufnr)
         end
     end, opts)
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end)
+end
 
-lsp.setup()
+local lspconfig = require('lspconfig')
 
--- Use native lspconfig
-lspconfig = require 'lspconfig'
-lspconfig.dartls.setup{}
-lspconfig.serve_d.setup({
+mason_lspconfig.setup({
+    ensure_installed = {
+        'rust_analyzer',
+        'pyright',
+        'clangd',
+    },
+    handlers = {
+        function(server_name)
+            lspconfig[server_name].setup({
+                on_attach = lsp_attach,
+                capabilites = lsp_capabilities,
+            })
+        end,
+    }
+})
+
+-- Use native lsp config
+vim.lsp.enable('dartls')
+vim.lsp.config('dartls', {
+    on_attach = lsp_attach,
+})
+vim.lsp.enable('serve_d')
+vim.lsp.config('serve_d', {
+    on_attach = lsp_attach,
     settings = {
         dfmt = {
             braceStyle = "otbs"
