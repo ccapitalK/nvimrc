@@ -43,6 +43,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP actions',
     callback = function(client, bufnr)
         local opts = {buffer = bufnr, remap = false}
+        vim.wo.foldmethod = 'expr'
+        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+
 
         vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
         vim.keymap.set("n", "<leader>gd", function() vim.lsp.buf.declaration() end, opts)
