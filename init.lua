@@ -15,6 +15,7 @@ vim.opt.list = false
 vim.opt.lazyredraw = false
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true
+vim.opt.foldtext = ''
 
 -- Neovim options
 vim.opt.smartindent = true
