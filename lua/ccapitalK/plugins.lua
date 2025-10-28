@@ -17,12 +17,12 @@ return require('packer').startup(function()
     -- LSP stuff
     use {'neovim/nvim-lspconfig'}             -- Required
     use {                                      -- Optional
-      'williamboman/mason.nvim',
+      'mason-org/mason.nvim',
       run = function()
         pcall(vim.cmd, 'MasonUpdate')
       end,
     }
-    use {'williamboman/mason-lspconfig.nvim'} -- Optional
+    use {'mason-org/mason-lspconfig.nvim'} -- Optional
     use {'hrsh7th/nvim-cmp'}     -- Required
     use {'hrsh7th/cmp-nvim-lsp'} -- Required
     use {'L3MON4D3/LuaSnip'}     -- Required
